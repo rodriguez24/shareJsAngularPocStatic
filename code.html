@@ -1,23 +1,36 @@
 <!DOCTYPE html>
-<!--<html ng-app="app">-->
-<html>
+<html ng-app="app">
 <head>
   <title>ShareJs & Ace & AngularJs</title>
 
   <link rel="stylesheet" href="css/app.css">
   <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
 </head>
-<!--<body ng-controller="MainCtrl">-->
-<body>
-  <div id="header">
-    <div id="htext">
-      Editing <b id='docname'>...</b>
-      <a style="padding-left: 50px;" href="/code.html">New</a>
+<body ng-controller="MainCtrl">
+
+  <!--<div id="header">-->
+    <!--<div id="htext">-->
+      <!--Editing <b id='docname'>...</b>-->
+      <!--<a style="padding-left: 50px;" href="/code.html">New</a>-->
+    <!--</div>-->
+  <!--</div>-->
+
+
+  <form name="codeForm" class="form-validation" ng-submit="processForm()" novalidate>
+    <h2>Coding Question</h2>
+
+    <div id="code-container" class="form col-sm-12">
+      <div class="editor" ng-model="questionResult.answer" style="height: 325px;"
+           ui-ace="{ mode: 'java',
+                     theme: 'monokai',
+                     onLoad: aceLoaded,
+                     onChange: aceChanged
+                   }"></div>
     </div>
 
-  </div>
+    <button name="submitButton" class="btn btn-lg btn-primary col-md-12 mt15" type="submit">Submit</button>
+  </form>
 
-  <div id="editor">Loading...</div>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 
@@ -30,60 +43,13 @@
   <script src="js/lib/share.uncompressed.js"></script><!-- v0.6.3 -->
   <script src="app/share-ace.js"></script><!-- v0.6.3 -->
 
-  <!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.3/angular.min.js"></script>-->
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.3/angular.min.js"></script>
 
-  <script>
-    var randomDocName = function(length) {
-      var chars, x;
-      if (length == null) {
-        length = 10;
-      }
-      chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-=";
-      var name = [];
-      for (x = 0; x < length; x++) {
-        name.push(chars[Math.floor(Math.random() * chars.length)]);
-      }
-      return name.join('');
-    };
-
-    window.onload = function() {
-      var editor = ace.edit("editor");
-
-      editor.setReadOnly(true);
-      editor.getSession().setUseSoftTabs(true);
-      editor.getSession().setTabSize(2);
-//      editor.getSession().setMode(new (require("ace/mode/coffee").Mode));
-      editor.setTheme("ace/theme/idle_fingers");
-
-      if (!document.location.hash) {
-        document.location.hash = '#' + randomDocName();
-      }
-      var docName = "code:" + document.location.hash.slice(1);
-      var span = document.getElementById('docname').innerText = docName;
-
-
-      // Call shareJs
-      var options = {
-        origin: "http://localhost:8000/channel"
-      };
-
-      sharejs.open(docName, 'text', options, function(error, doc) {
-        if (error) {
-          console.error(error);
-          return;
-        }
-
-        if (doc.created) {
-          doc.insert(0, "# Coffeescript editor!\n\nexports.foo = ->\n  console.log 'hi!'");
-        }
-
-        doc.attach_ace(editor);
-        editor.setReadOnly(false);
-      });
-    };
-  </script>
+  <!-- UI ace -->
+  <script type="text/javascript" src="js/lib/ui-ace-0.1.0/ui-ace.js"></script>
 
   <!-- App -->
-  <!--<script src="app/app.js"></script>-->
+  <script src="app/app.js"></script>
+
 </body>
 </html>
